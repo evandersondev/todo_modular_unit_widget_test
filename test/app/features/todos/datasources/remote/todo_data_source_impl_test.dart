@@ -10,7 +10,7 @@ import 'package:flutter_tests/app/features/todos/datasources/todo_data_source.da
 import 'package:flutter_tests/app/features/todos/entities/todo_entity.dart';
 import 'package:flutter_tests/app/features/todos/todo_module.dart';
 
-import '../todo_success_mock.dart';
+import '../../todo_success_mock.dart';
 
 class DioMock extends Mock implements Dio {}
 

@@ -16,7 +16,7 @@ class TodoDataSourceMock extends Mock implements ITodoDataSource {}
 void main() {
   late TodoDataSourceMock dataSource;
 
-  setUp(() {
+  setUpAll(() {
     dataSource = TodoDataSourceMock();
 
     initModule(TodoModule(), replaceBinds: [
@@ -24,7 +24,7 @@ void main() {
     ]);
   });
 
-  tearDown(() {
+  tearDownAll(() {
     Modular.destroy();
   });
 
@@ -53,5 +53,47 @@ void main() {
 
       expect(find.text('todo test'), findsNothing);
     });
+
+    testWidgets("Should show message error", (WidgetTester tester) async {
+      when(() => dataSource.loadTodos()).thenAnswer(
+        (_) async => Result.failure(Exception("Ops!")),
+      );
+
+      await tester.pumpWidget(const MaterialApp(home: TodosPage()));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(AlertDialog), findsOneWidget);
+    });
+  });
+
+  testWidgets("Should show checkbox how 'FALSE'", (WidgetTester tester) async {
+    when(() => dataSource.loadTodos()).thenAnswer(
+      (_) async => Result.success(
+          [TodoEntity(id: 1, userId: 1, title: 'TODO_TEST', completed: false)]),
+    );
+
+    await tester.pumpWidget(const MaterialApp(home: TodosPage()));
+    await tester.pumpAndSettle();
+
+    final checkbox = find.byType(Checkbox).evaluate().first.widget as Checkbox;
+    checkbox.onChanged?.call(true);
+
+    await tester.pumpAndSettle();
+    expect(checkbox.value, isFalse);
+  });
+
+  testWidgets("Should one 'Divider' if have two 'TODO'",
+      (WidgetTester tester) async {
+    when(() => dataSource.loadTodos()).thenAnswer(
+      (_) async => Result.success([
+        TodoEntity(id: 1, userId: 1, title: 'TODO_TEST', completed: false),
+        TodoEntity(id: 2, userId: 2, title: 'TODO_TEST_2', completed: true)
+      ]),
+    );
+
+    await tester.pumpWidget(const MaterialApp(home: TodosPage()));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(Divider), findsOneWidget);
   });
 }

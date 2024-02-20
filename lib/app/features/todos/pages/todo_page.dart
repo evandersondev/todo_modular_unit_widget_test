@@ -52,6 +52,7 @@ class _TodosPageState extends State<TodosPage> {
                 itemCount: value.todo.length,
                 itemBuilder: (context, index) {
                   final todo = value.todo[index];
+
                   return ListTile(
                     title: Text(
                       todo.title,
