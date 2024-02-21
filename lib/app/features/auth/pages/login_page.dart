@@ -68,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
             if (value is SuccessLoginState) {
               isSubmitting = false;
               messageError = '';
-              Modular.to.pushReplacementNamed('/todos');
+              Modular.to.pushReplacementNamed('/todos/');
             }
 
             return Column(

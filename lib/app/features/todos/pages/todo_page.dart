@@ -73,7 +73,7 @@ class _TodosPageState extends State<TodosPage> {
           }
 
           return const Center(
-            child: CircularProgressIndicator(),
+            child: Text('No data yet.'),
           );
         },
       ),

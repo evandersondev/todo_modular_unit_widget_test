@@ -9,10 +9,10 @@ class LoginDataSourceImpl implements ILoginDataSource {
   Future<Result<void, FailureException>> call(LoginDto dto) async {
     await Future.delayed(const Duration(seconds: 2));
 
-    if (dto.email == 'test@mail.com' && dto.password == '123') {
+    if (dto.email != 'test@mail.com' && dto.password != '123') {
       return Result.success(0);
     }
 
-    return Result.failure(FailureException('Ops, Login success!'));
+    return Result.failure(FailureException('Ops, Login error!'));
   }
 }

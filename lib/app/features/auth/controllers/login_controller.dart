@@ -17,14 +17,14 @@ class LoginControler extends ValueNotifier<LoginState> {
 
     final result = await _datasoure(dto);
 
-    result.onSuccess((success) async {
+    result.onSuccess((_) async {
+      value = SuccessLoginState();
+
       const storage = FlutterSecureStorage();
       final jwt = JWT({'id': 123, 'email': dto.email});
 
       final token = jwt.sign(SecretKey('pag.ai'));
       await storage.write(key: 'token', value: token);
-
-      value = SuccessLoginState();
     });
 
     result.onFailure((failure) {

@@ -1,31 +1,33 @@
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:modular_test/modular_test.dart';
+import 'package:result_dart/result_dart.dart';
 
+import 'package:flutter_tests/app/core/services/app_client.dart';
+import 'package:flutter_tests/app/core/services/app_response.dart';
 import 'package:flutter_tests/app/features/todos/datasources/todo_data_source.dart';
 import 'package:flutter_tests/app/features/todos/entities/todo_entity.dart';
 import 'package:flutter_tests/app/features/todos/todo_module.dart';
 
 import '../../todo_success_mock.dart';
 
-class DioMock extends Mock implements Dio {}
+class ClientMock extends Mock implements IAppClient {}
 
 void main() {
-  late DioMock dioMock;
-  late ITodoDataSource service;
+  late IAppClient clientMock;
+  late ITodoDataSource sut;
 
   setUp(() {
-    dioMock = DioMock();
+    clientMock = ClientMock();
 
     initModule(TodoModule(), replaceBinds: [
-      Bind.instance<Dio>(dioMock),
+      Bind.instance<IAppClient>(clientMock),
     ]);
 
-    service = Modular.get<ITodoDataSource>();
+    sut = Modular.get<ITodoDataSource>();
   });
 
   tearDown(() {
@@ -34,15 +36,14 @@ void main() {
 
   group("TodoDataSource |", () {
     test('Should to load todos with success', () async {
-      when(() => dioMock.get(any())).thenAnswer(
-        (_) async => Response(
+      when(() => clientMock.get(any())).thenAnswer(
+        (_) async => Result.success(AppResponse(
           data: jsonDecode(todoSuccessMock),
-          requestOptions: RequestOptions(),
-          statusCode: 200,
-        ),
+          code: 200,
+        )),
       );
 
-      (await service.loadTodos()).fold(
+      (await sut.loadTodos()).fold(
         (success) {
           expect(success, isInstanceOf<List<TodoEntity>>());
         },
@@ -51,14 +52,13 @@ void main() {
     });
 
     test('Should to show message error with failure', () async {
-      when(() => dioMock.get(any())).thenAnswer(
-        (_) async => Response(
-            requestOptions: RequestOptions(),
-            statusCode: 400,
-            statusMessage: 'Ops!'),
+      when(() => clientMock.get(any())).thenAnswer(
+        (_) async => Result.failure(
+          const Failure('Ops!'),
+        ),
       );
 
-      (await service.loadTodos()).fold(
+      (await sut.loadTodos()).fold(
         (success) => success,
         (failure) {
           expect(failure, isInstanceOf<Exception>());

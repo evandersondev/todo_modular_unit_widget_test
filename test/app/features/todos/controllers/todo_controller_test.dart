@@ -12,17 +12,17 @@ import 'package:flutter_tests/app/features/todos/todo_module.dart';
 class TodoDataSourceMock extends Mock implements ITodoDataSource {}
 
 void main() {
-  late TodoDataSourceMock dataSource;
-  late TodoController controller;
+  late TodoDataSourceMock dataSourceMock;
+  late TodoController sut;
 
   setUp(() {
-    dataSource = TodoDataSourceMock();
+    dataSourceMock = TodoDataSourceMock();
 
     initModule(TodoModule(), replaceBinds: [
-      Bind.instance<ITodoDataSource>(dataSource),
+      Bind.instance<ITodoDataSource>(dataSourceMock),
     ]);
 
-    controller = Modular.get<TodoController>();
+    sut = Modular.get<TodoController>();
   });
 
   tearDown(() {
@@ -31,23 +31,23 @@ void main() {
 
   group("TodoController |", () {
     test('Should be instance of SuccessTodoState', () async {
-      when(() => dataSource.loadTodos()).thenAnswer(
+      when(() => dataSourceMock.loadTodos()).thenAnswer(
         (_) async => Result.success([]),
       );
 
-      await controller.load();
+      await sut.load();
 
-      expect(controller.value, isA<SuccessTodoState>());
+      expect(sut.value, isA<SuccessTodoState>());
     });
 
     test('Should be instance of ErrorTodoState', () async {
-      when(() => dataSource.loadTodos()).thenAnswer(
+      when(() => dataSourceMock.loadTodos()).thenAnswer(
         (_) async => Result.failure(Exception('Ops!')),
       );
 
-      await controller.load();
+      await sut.load();
 
-      expect(controller.value, isA<ErrorTodoState>());
+      expect(sut.value, isA<ErrorTodoState>());
     });
   });
 }
