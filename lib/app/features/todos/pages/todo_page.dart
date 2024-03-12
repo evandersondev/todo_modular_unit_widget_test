@@ -28,6 +28,7 @@ class _TodosPageState extends State<TodosPage> {
       appBar: AppBar(
         title: const Text('T O D O S'),
         centerTitle: true,
+        elevation: 0,
       ),
       body: ValueListenableBuilder(
         valueListenable: todoController,
@@ -45,30 +46,52 @@ class _TodosPageState extends State<TodosPage> {
           }
 
           if (value is SuccessTodoState) {
-            return Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: ListView.separated(
-                separatorBuilder: (context, index) => const Divider(),
-                itemCount: value.todo.length,
-                itemBuilder: (context, index) {
-                  final todo = value.todo[index];
+            final totalChecked = value.todo.where((e) => e.completed == true).toList().length;
 
-                  return ListTile(
-                    title: Text(
-                      todo.title,
-                      style: TextStyle(
-                        decoration: todo.completed
-                            ? TextDecoration.lineThrough
-                            : TextDecoration.none,
-                      ),
-                    ),
-                    leading: Checkbox(
-                      value: todo.completed,
-                      onChanged: (value) {},
-                    ),
-                  );
-                },
-              ),
+            return Column(
+              children: [
+                Container(
+                  color: Colors.purple.shade800,
+                  child: ListTile(
+                      titleAlignment: ListTileTitleAlignment.center,
+                      title: Text('$totalChecked/${value.todo.length} todos encontrados', style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 18,
+                        color: Colors.white,
+                      ),),
+                  ),
+                ),
+                const Divider(),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: value.todo.length,
+                    padding: const EdgeInsets.all(12.0),
+                    itemBuilder: (context, index) {
+                      final todo = value.todo[index];
+
+                      return Column(
+                        children: [
+                          CheckboxListTile (
+                            value: todo.completed,
+                            onChanged: (value) {
+                              todoController.check(todo);
+                            },
+                            title: Text(
+                              todo.title,
+                              style: TextStyle(
+                                decoration: todo.completed
+                                    ? TextDecoration.lineThrough
+                                    : TextDecoration.none,
+                              ),
+                            ),
+                          ),
+                          const Divider()
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ],
             );
           }
 

@@ -7,13 +7,13 @@ void main() {
     final todoMap = {
       "userId": 1,
       "id": 1,
-      "title": "delectus aut autem",
+      "title": 'Lorem ipsum',
       "completed": false
     };
 
     final todoEntity = TodoEntity.fromMap(todoMap);
 
     expect(todoEntity, isInstanceOf<TodoEntity>());
-    expect(todoEntity.title, equals('delectus aut autem'));
+    expect(todoEntity.title, equals('Lorem ipsum'));
   });
 }

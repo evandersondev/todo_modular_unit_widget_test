@@ -10,7 +10,7 @@ class AuthModule extends Module {
   @override
   final List<Bind> binds = [
     Bind.lazySingleton<ILoginDataSource>((i) => LoginDataSourceImpl()),
-    Bind.factory((i) => LoginControler(i()))
+    Bind.factory((i) => LoginController(i()))
   ];
 
   @override

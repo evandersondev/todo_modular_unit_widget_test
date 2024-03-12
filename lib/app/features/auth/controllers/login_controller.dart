@@ -7,8 +7,8 @@ import 'package:flutter_tests/app/features/auth/datasources/login_data_source.da
 import 'package:flutter_tests/app/features/auth/dtos/login_dto.dart';
 import 'package:flutter_tests/app/features/auth/states/login_state.dart';
 
-class LoginControler extends ValueNotifier<LoginState> {
-  LoginControler(this._datasoure) : super(InitialLoginState());
+class LoginController extends ValueNotifier<LoginState> {
+  LoginController(this._datasoure) : super(InitialLoginState());
 
   final ILoginDataSource _datasoure;
 

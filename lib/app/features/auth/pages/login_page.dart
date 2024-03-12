@@ -14,7 +14,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final loginController = Modular.get<LoginControler>();
+  final loginController = Modular.get<LoginController>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 

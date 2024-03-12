@@ -16,7 +16,7 @@ class LoginDataSourceMock extends Mock implements ILoginDataSource {}
 void main() {
   late FlutterSecureStorage storage;
   late ILoginDataSource dataSourceMock;
-  late LoginControler sut;
+  late LoginController sut;
 
   setUp(() {
     TestWidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +28,7 @@ void main() {
       Bind.instance<ILoginDataSource>(dataSourceMock),
     ]);
 
-    sut = Modular.get<LoginControler>();
+    sut = Modular.get<LoginController>();
   });
 
   tearDown(() {
@@ -41,7 +41,7 @@ void main() {
   );
 
   group('LoginController |', () {
-    test('Shoud be instanceOf SuccessLoginState', () async {
+    test('Should be instanceOf SuccessLoginState', () async {
       when(() => dataSourceMock(loginDtoMock)).thenAnswer(
         (_) async => Result.success(0),
       );
@@ -51,7 +51,7 @@ void main() {
       });
     });
 
-    test('Shoud be save token in local storage', () async {
+    test('Should be save token in local storage', () async {
       when(() => dataSourceMock(loginDtoMock)).thenAnswer(
         (_) async => Result.success(0),
       );
